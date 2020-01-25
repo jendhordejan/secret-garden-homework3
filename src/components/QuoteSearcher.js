@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import Title from "./Title";
 import QuoteSearcherDisplay from "./QuoteSearcherDisplay";
 import SearchQuotes from "./SearchQuotes";
-import AddQuote from "./AddQuote";
 export default class QuoteSearcher extends Component {
   state = {
     loading: false,
     quotes: [],
     liked: false,
     disliked: false,
-    query: "tree"
+    query: "tree",
+    noResult: false
   };
 
   invokeAPIToFetchData = async () => {
@@ -18,7 +18,6 @@ export default class QuoteSearcher extends Component {
         `https://quote-garden.herokuapp.com/quotes/search/${this.state.query}`
       );
       const parsedQuoteItems = await quoteItems.json();
-      console.log("parsedQuoteItems", parsedQuoteItems);
       const updateQuoteList = parsedQuoteItems.results.map(q => {
         return {
           ...q,
@@ -28,8 +27,11 @@ export default class QuoteSearcher extends Component {
           dislikeness: 0
         };
       });
+
+      console.log("updateQuoteListcount: ", updateQuoteList.length);
       this.setState({
         loading: true,
+        noResult: false,
         quotes: updateQuoteList
       });
     } catch (error) {
@@ -113,6 +115,12 @@ export default class QuoteSearcher extends Component {
             submitNewQuote={this.submitNewQuote}
           />
         </div>
+        {this.state.quotes.length === 0 && (
+          <div>
+            There seems to be no quotes for this topic yet. Be the first one to
+            contribute and inspire others!
+          </div>
+        )}
       </div>
     );
   }
