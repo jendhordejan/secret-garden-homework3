@@ -1,19 +1,20 @@
 import React, { Component } from "react";
 import Title from "./Title";
 import QuoteSearcherDisplay from "./QuoteSearcherDisplay";
-
+import SearchQuotes from "./SearchQuotes";
 export default class QuoteSearcher extends Component {
   state = {
     loading: false,
     quotes: [],
     liked: false,
-    disliked: false
+    disliked: false,
+    query: "tree"
   };
 
   invokeAPIToFetchData = async () => {
     try {
       const quoteItems = await fetch(
-        `https://quote-garden.herokuapp.com/quotes/search/tree`
+        `https://quote-garden.herokuapp.com/quotes/search/${this.state.query}`
       );
       const parsedQuoteItems = await quoteItems.json();
       console.log("parsedQuoteItems", parsedQuoteItems);
@@ -75,6 +76,12 @@ export default class QuoteSearcher extends Component {
     this.invokeAPIToFetchData();
   };
 
+  changeQuery = searchQuery => {
+    this.setState({ query: searchQuery, loading: false }, () => {
+      this.invokeAPIToFetchData();
+    });
+  };
+
   render() {
     return !this.state.loading ? (
       <div>
@@ -84,6 +91,7 @@ export default class QuoteSearcher extends Component {
     ) : (
       <div>
         <Title title="Quotes" />
+        <SearchQuotes changeQuery={this.changeQuery} />
         <div className="displayQuote">
           <QuoteSearcherDisplay
             quotes={this.state.quotes}
