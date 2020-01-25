@@ -1,42 +1,54 @@
 import React, { Component } from "react";
+import Title from "./Title";
 import QuoteSearcherDisplay from "./QuoteSearcherDisplay";
 
 export default class QuoteSearcher extends Component {
   state = {
-    quotes: [
-      {
-        _id: "5d91b45d9980192a317c8acc",
-        quoteText:
-          "Notice that the stiffest tree is most easily cracked, while the bamboo or willow survives by bending with the wind.",
-        quoteAuthor: "Bruce Lee"
-      },
-      {
-        _id: "5d91b45d9980192a317c8abe",
-        quoteText:
-          "Give me six hours to chop down a tree and I will spend the first four sharpening the axe.",
-        quoteAuthor: "Abraham Lincoln"
-      },
-      {
-        _id: "5d91b45d9980192a317c8955",
-        quoteText:
-          "Good timber does not grow with ease; the stronger the wind, the stronger the trees.",
-        quoteAuthor: "J. Willard Marriott"
-      }
-    ]
+    loading: false,
+    quotes: []
+  };
+
+  invokeAPIToFetchData = async () => {
+    try {
+      const quoteItems = await fetch(
+        `https://quote-garden.herokuapp.com/quotes/search/tree`
+      );
+      const parsedQuoteItems = await quoteItems.json();
+      this.setState({
+        loading: true,
+        quotes: parsedQuoteItems.results
+      });
+    } catch (error) {
+      this.setState({
+        error: error
+      });
+    }
+  };
+  componentDidMount = async () => {
+    this.invokeAPIToFetchData();
   };
 
   render() {
+    console.log("check quote state", this.state);
     const displayQuote = this.state.quotes.map(quoteItem => {
       return (
-        <QuoteSearcherDisplay
-          id={quoteItem._id}
-          quote={quoteItem.quoteText}
-          author={quoteItem.quoteAuthor}
-        />
+        <div>
+          <QuoteSearcherDisplay
+            id={quoteItem._id}
+            quote={quoteItem.quoteText}
+            author={quoteItem.quoteAuthor}
+          />
+        </div>
       );
     });
-    return (
+    return !this.state.loading ? (
       <div>
+        <Title title="Quotes" />
+        <h2>Loading...</h2>
+      </div>
+    ) : (
+      <div>
+        <Title title="Quotes" />
         <div className="displayQuote">{displayQuote}</div>
       </div>
     );
