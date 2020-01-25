@@ -35,7 +35,7 @@ export default class Quote extends Component {
         <div className="quoteText" style={this.selectStyle(liked, disliked)}>
           {quoteItem.quoteText}
         </div>
-        <div>{quoteItem.quoteAuthor}</div>
+        <div>by: {quoteItem.quoteAuthor}</div>
         <div className="likes-dislikes">
           <div className="likes-dislikes-hellyeah">
             <button

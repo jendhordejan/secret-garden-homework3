@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Title from "./Title";
 import QuoteSearcherDisplay from "./QuoteSearcherDisplay";
 import SearchQuotes from "./SearchQuotes";
+import AddQuote from "./AddQuote";
 export default class QuoteSearcher extends Component {
   state = {
     loading: false,
@@ -82,6 +83,18 @@ export default class QuoteSearcher extends Component {
     });
   };
 
+  submitNewQuote = (quoteText, quoteAuthor) => {
+    console.log("Player being added!", quoteText);
+    const newQuote = {
+      id: Math.trunc(Math.random() * 10000),
+      quoteText,
+      quoteAuthor
+    };
+    this.setState({
+      quotes: [...this.state.quotes, newQuote]
+    });
+  };
+
   render() {
     return !this.state.loading ? (
       <div>
@@ -97,6 +110,7 @@ export default class QuoteSearcher extends Component {
             quotes={this.state.quotes}
             quoteLiked={this.quoteLiked}
             quoteDisLiked={this.quoteDisLiked}
+            submitNewQuote={this.submitNewQuote}
           />
         </div>
       </div>
