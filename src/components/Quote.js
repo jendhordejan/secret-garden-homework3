@@ -27,6 +27,11 @@ export default class Quote extends Component {
     const { quoteItem, liked, disliked } = this.props;
     return (
       <div className="quoteCard" id={quoteItem._id}>
+        <div className="likesCounter">
+          <b>
+            Likes: {quoteItem.likeness} Dislikes: {quoteItem.dislikeness}
+          </b>
+        </div>
         <div className="quoteText" style={this.selectStyle(liked, disliked)}>
           {quoteItem.quoteText}
         </div>

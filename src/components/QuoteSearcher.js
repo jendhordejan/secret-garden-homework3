@@ -18,7 +18,13 @@ export default class QuoteSearcher extends Component {
       const parsedQuoteItems = await quoteItems.json();
       console.log("parsedQuoteItems", parsedQuoteItems);
       const updateQuoteList = parsedQuoteItems.results.map(q => {
-        return { ...q, liked: false, disliked: false };
+        return {
+          ...q,
+          liked: false,
+          disliked: false,
+          likeness: 0,
+          dislikeness: 0
+        };
       });
       this.setState({
         loading: true,
@@ -36,7 +42,12 @@ export default class QuoteSearcher extends Component {
     console.log("quoteLiked ID", id);
     const updatedQuotes = quoteList.map(quoteItem =>
       quoteItem._id === id
-        ? { ...quoteItem, liked: true, disliked: false }
+        ? {
+            ...quoteItem,
+            liked: true,
+            disliked: false,
+            likeness: quoteItem.likeness + 1
+          }
         : quoteItem
     );
     this.setState({ quotes: updatedQuotes });
@@ -47,7 +58,12 @@ export default class QuoteSearcher extends Component {
     console.log("quoteLiked ID", id);
     const updatedQuotes = quoteList.map(quoteItem =>
       quoteItem._id === id
-        ? { ...quoteItem, liked: false, disliked: true }
+        ? {
+            ...quoteItem,
+            liked: false,
+            disliked: true,
+            dislikeness: quoteItem.dislikeness + 1
+          }
         : quoteItem
     );
     this.setState({ quotes: updatedQuotes });
